@@ -6,16 +6,18 @@ import scala.concurrent.{Future, ExecutionContext}
 
 package object future {
 
-    implicit sealed class FutureOption[T](future: Future[Option[T]]) {
+    object implicits {
+        implicit sealed class FutureOption[T](future: Future[Option[T]]) {
 
-        def getOrElse(default: => T)(implicit executor: ExecutionContext): Future[T] =
-            future.map(_.getOrElse(default))
+            def getOrElse(default: => T)(implicit executor: ExecutionContext): Future[T] =
+                future.map(_.getOrElse(default))
 
-        def orElse(default: => Future[T])(implicit executor: ExecutionContext): Future[T] =
-            future flatMap {
-                case Some(x) => Future.successful(x)
-                case None => default
-            }
+            def orElse(default: => Future[T])(implicit executor: ExecutionContext): Future[T] =
+                future flatMap {
+                    case Some(x) => Future.successful(x)
+                    case None => default
+                }
+        }
     }
 
     trait MyMonad[F[_]] {

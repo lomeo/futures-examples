@@ -9,6 +9,8 @@ import org.scalatest._
 
 class FutureOptionTest extends AsyncFlatSpec with Matchers with FutureInstances {
 
+    import implicits._
+
     behavior of "FutureOption.getOrElse"
 
     it should "return value wrapped with Some" in {

@@ -77,6 +77,16 @@ class FutureOptionTest extends AsyncFlatSpec with Matchers with FutureInstances 
             m.flatMap(f)
     }
 
+    it should "map value as usual" in {
+        new MyOptionT(Future(Option(42))).map(_ / 2).getOrElse(0).map(n => assert(n === 21))
+        new MyOptionT(Future(Option.empty[Int])).map(_ / 2).getOrElse(0).map(n => assert(n === 0))
+    }
+
+    it should "flatMap value as usual" in {
+        new MyOptionT(Future(Option(42))).flatMap(x => new MyOptionT(Future(Option(x / 2)))).getOrElse(0).map(n => assert(n === 21))
+        new MyOptionT(Future(Option.empty[Int])).flatMap(x => new MyOptionT(Future(Option(x / 2)))).getOrElse(0).map(n => assert(n === 0))
+    }
+
     it should "return value wrapped with Some" in {
         new MyOptionT(Future(Option(42))).getOrElse(0).map(n => assert(n === 42))
         new MyOptionT(Future(Option(42))).orElse(Future(0)).map(n => assert(n === 42))

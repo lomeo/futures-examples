@@ -10,7 +10,7 @@ import simulacrum.typeclass
 
 @typeclass trait AsOptionT[F[+_]] {
 
-    def toOptionT[O, T](f: F[O])(implicit evF: Functor[F], evO: O =:= Option[T]): OptionT[F, T] =
+    def toOptionT[T](f: F[Option[T]])(implicit evF: Functor[F]): OptionT[F, T] =
         OptionT(f.asInstanceOf[F[Option[T]]])
 
     def getOrElse[O, T](f: F[O], default: => T)(implicit evM: Monad[F], evO: O =:= Option[T]): F[T] =
